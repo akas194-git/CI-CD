@@ -1,0 +1,28 @@
+FROM jenkins/jenkins:lts
+MAINTAINER 
+RUN apt-get update
+RUN apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common 
+
+#for secure download from repositories. installing all dependencies that are necessary to add a new repositories over HTTPS.
+#apt-transport-https = APT transport for downloading via the HTTP Secure protocol (HTTPS) instead of http.
+#ca-certificate = A deb package that contains certificates provided by the Certificate Authorities. This package includes PEM files of CA certificates to allow SSL-based applications to check for the authenticity of SSL connections.It is a digital certificate that is used to verify the identity of 3rd parties, and encrypt data betweenyou and said 3rd party.
+# GnuPG is GNU's tool for secure communication and data storage.It can be used to encrypt data and to create digital signatures.It includes an advanced key management facility and is compliant with the proposed OpenPGP Internet standard as described in RFC4880.
+#software-properties-common =this package manages the repositories that we install software from (common)
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+#importing dockers official GPG key to verify packages signature before installing them with apt-get.
+#apt-key is used to manage the list of keys used by apt to authenticate packages. apt-key add - = adding the trusted GPG key into managed list.
+
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+
+#adding the Docker repository on our Debian system which contains Docker packages including its dependencies
+#add-apt-repository = add-apt-repository  is  a  script  which  adds  an  external  APT  repository  to   either 
+#/etc/apt/sources.list or a file in /etc/apt/sources.list.d/
+#lsb_release - cs = returns the name of debian distribution.(latest) 
+
+RUN apt-get update
+RUN apt-get install docker-ce
+
+#installing docker image 
+
